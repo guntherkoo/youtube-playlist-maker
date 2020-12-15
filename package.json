@@ -1,0 +1,41 @@
+{
+    "name": "youtube-playlist-maker",
+    "author": "Gunther Koo",
+    "version": "1.0.0",
+    "main": "server.js",
+    "scripts": {
+        "dev": "node server.js",
+        "build": "next build",
+        "now-build": "next build"
+    },
+    "dependencies": {
+        "@zeit/next-bundle-analyzer": "^0.1.2",
+        "@zeit/next-css": "^1.0.1",
+        "acorn": "^6.1.1",
+        "autoprefixer": "^9.8.6",
+        "babel": "^6.23.0",
+        "classnames": "^2.2.6",
+        "classnames-loader": "^2.1.0",
+        "compression": "^1.7.4",
+        "core-js": "^3.6.4",
+        "cross-fetch": "^3.0.3",
+        "express": "^4.16.4",
+        "firebase": "^6.6.2",
+        "isomorphic-unfetch": "^3.0.0",
+        "next": "^9.5.5",
+        "next-compose": "0.0.2",
+        "next-routes": "^1.4.2",
+        "normalize-scss": "^7.0.1",
+        "react": "^16.14.0",
+        "react-dom": "^16.14.0"
+    },
+    "devDependencies": {
+        "@zeit/next-sass": "^1.0.1",
+        "babel-eslint": "^10.0.1",
+        "babel-loader": "^8.0.4",
+        "babel-plugin-inline-react-svg": "^1.0.1",
+        "babel-plugin-module-resolver": "^3.2.0",
+        "lodash-webpack-plugin": "^0.11.5",
+        "node-sass": "^4.14.1"
+    }
+}

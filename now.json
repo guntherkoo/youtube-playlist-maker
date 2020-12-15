@@ -1,0 +1,8 @@
+{
+	"version": 2,
+	"name": "youtube-playlist-maker",
+	"builds": [{
+		"src": "package.json",
+		"use": "@now/next"
+	}]
+}
