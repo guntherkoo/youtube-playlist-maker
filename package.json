@@ -25,7 +25,6 @@
         "next": "^9.5.5",
         "next-compose": "0.0.2",
         "next-routes": "^1.4.2",
-        "normalize-scss": "^7.0.1",
         "react": "^16.14.0",
         "react-dom": "^16.14.0"
     },
@@ -35,7 +34,9 @@
         "babel-loader": "^8.0.4",
         "babel-plugin-inline-react-svg": "^1.0.1",
         "babel-plugin-module-resolver": "^3.2.0",
+        "get-youtube-title": "^1.0.1",
         "lodash-webpack-plugin": "^0.11.5",
-        "node-sass": "^4.14.1"
+        "node-sass": "^4.14.1",
+        "react-youtube": "^7.13.0"
     }
 }

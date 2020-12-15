@@ -18,3 +18,6 @@ Script will run and URL will be copied to clipboard to view.
 - Classnames-loader
 - Next/SASS
 - Autoprefixer
+
+### Troubleshoot
+**May require node v12.0.0 to install due to node-sass version**

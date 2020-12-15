@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import GlobalStyles from 'styles/styles.scss';
+import 'styles/styles.scss';
 
 class Index extends Component {
 	static getInitialProps ({ req }) {

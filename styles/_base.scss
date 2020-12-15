@@ -1,20 +1,7 @@
-// Base Styles
-.clearfix:before,
-.clearfix:after {
-	content: "";
-	display: table;
-}
-
-.clearfix:after {
-	clear: both;
-}
-
-.clearfix {
-	zoom: 1;
-}
-
 * {
-	font-family: 'Oswald', sans-serif;
+	font-family: 'Ubuntu', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 
 	box-sizing: border-box;
 	margin: 0;
@@ -23,41 +10,4 @@
 html,
 body {
 	font-size: 10px;
-}
-
-// Type Styles
-p {
-	font-size: 1.4rem;
-    line-height: 1.6em;
-
-	small {
-		font-size: .8em;
-	}
-}
-
-a {
-	transition: color .25s $easeInOut;
-	backface-visibility: hidden;
-	text-decoration: none;
-	color: $grey;
-	font-family: inherit;
-
-	&:hover {
-		color: $darkergrey;
-		cursor: pointer;
-	}
-
-	&:focus {
-		outline: none;
-	}
-}
-
-ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-
-	li {
-		font-size: 1.4rem;
-	}
 }
