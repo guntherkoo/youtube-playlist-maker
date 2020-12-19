@@ -1,0 +1,65 @@
+@mixin ripple-effect {
+	&:after {
+		width: 0;
+		height: 0;
+		content: '';
+		background-color: $purple;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		z-index: -1;
+		border-radius: 5rem;
+		transform: translate3d(-50%,-50%,0);
+		transition: width .25s $easeOutCubic, height .25s $easeOutCubic;
+	}
+
+	&:before {
+		width: 0;
+		height: 0;
+		content: '';
+		background-color: transparent;
+		position: absolute;
+		z-index: 0;
+		border-radius: 5rem;
+		transform-origin: 50% 50%;
+		transition: width .25s $easeOutCubic, height .25s $easeOutCubic;
+	}
+
+	&:hover {
+		&:after {
+			width: 5rem;
+			height: 5rem;
+		}
+	}
+
+	&:active {
+		&:before {
+			animation: ripple .5s linear 0s 1;
+			border: 2px solid $purple;
+			width: 4rem;
+			height: 4rem;
+		}
+	}
+}
+
+@keyframes ripple {
+	0% {
+		transform: scale(1);
+		opacity: 0;
+	}
+
+	50% {
+		transform: scale(2);
+		opacity: 1;
+	}
+
+	75% {
+		opacity: 1;
+	}
+
+	100% {
+		transform: scale(2.5);
+		opacity: 0;
+	}
+
+}
