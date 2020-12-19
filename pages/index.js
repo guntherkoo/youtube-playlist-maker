@@ -3,7 +3,7 @@ import firebase from 'firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
 import Meta from 'components/meta';
-import YouTubeLogo from 'components/icons/youtube.svg';
+import YouTubeLogo from 'components/icons/youtube-logo.svg';
 import 'styles/styles.scss';
 import styles from './index.scss';
 
