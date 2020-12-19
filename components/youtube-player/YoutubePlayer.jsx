@@ -1,80 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import getYoutubeTitle from 'get-youtube-title';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import YouTube from 'react-youtube';
+import ProgressBar from 'components/progress-bar';
+import Controls from 'components/controls';
+import { CSSTransition } from 'react-transition-group';
+
 import styles from './YoutubePlayer.scss';
 
 
-const playlistItems = [
-	{
-		source: 'youtube',
-		uid: 'jkBfGvb7NzM'
-	},
-	{
-		source: 'youtube',
-		uid: 'G4JuopziR3Q'
-	},
-	{
-		source: 'youtube',
-		uid: 'UBhlqe2OTt4'
-	},
-	{
-		source: 'youtube',
-		uid: '4iLVoEg9aLk'
-	}
-];
-
-
 const YoutubePlayer = ({
-	page_url
+	currentTitle,
+	current,
+	progress,
+	playState,
+	playlist,
+	player,
+	selectPlaylistItem = () => {},
+	setCurrentTitle = () => {},
+	_onProgressChange = () => {},
+	_onReady = () => {},
+	_prevSong = () => {},
+	_nextSong = () => {},
+	_onStateChange = () => {},
 }) => {
-	const [playlist, setPlaylist] = useState(playlistItems);
-	const [player, setPlayer] = useState();
-	const [current, setCurrent] = useState(playlist[0]);
-	const [progress, setProgress] = useState(0);
-	const [playState, setPlayState] = useState(0);
-	const [duration, setDuration] = useState(0);
-	const [inputValue, setInputValue] = useState('');
-
-
-	const _nextSong = () => {
-		const current_song = playlist.shift();
-		const new_playlist = playlist.concat(current_song);
-
-		setPlaylist(new_playlist);
-		setCurrent(playlist[0]);
-		setProgress(0);
-	};
-
-	const _prevSong = () => {
-		const prev_song = playlist[playlist.length - 1];
-		playlist.unshift(prev_song);
-		playlist.pop();
-
-		setPlaylist(playlist);
-		setCurrent(playlist[0]);
-		setProgress(0);
-	};
-
-	const _onStateChange = (e) => {
-		const current_state = e.target.getPlayerState();
-		const current_duration = e.target.getDuration();
-
-		setPlayState(current_state);
-		setDuration(current_duration);
-		// next on playlist when ended
-		if (current_state === 0) {
-			_nextSong();
-		}
-	};
-
-	const _onReady = (e) => {
-		setPlayer(e.target);
-
-		getYoutubeTitle(playlist[0].uid, function (err, title) {
-			console.log(title);
-		});
-	// access to player in all event handlers via event.target
-	};
+	const [toggleCover, setToggleCover] = useState(false);
 
 	const opts = {
 		height: '100%',
@@ -82,83 +31,40 @@ const YoutubePlayer = ({
 		playerVars: {
 			autoplay: 1,
 			rel: 0,
+			fs: 0,
+			playsinline: 1,
 			enablejsapi: 1,
 			controls: 0,
-			origin: page_url
+			origin: 'http://localhost:8888'
 		}
 	};
-
-	const _onProgressChange = (e) => {
-		const duration = player.getDuration();
-		// on change percent / 100% * duration
-		const current = Number((e.target.value / 100) * duration);
-		setProgress(e.target.value);
-		player.seekTo(current);
-		player.playVideo();
-	};
-
-	const progress_styles = {
-		width: `${progress}%`
-	};
-
-	useEffect(() => {
-		let interval;
-		if (player && playState === 1) {
-			interval = setInterval(() => {
-				let currentTime = player.getCurrentTime();
-				let percentage = ((currentTime / duration) * 100).toFixed(2);
-				setProgress(percentage);
-			}, 100);
-		}
-		return () => clearInterval(interval);
-	}, [playState, duration, progress]);
-
-	const onInputChange = (e) => {
-		let input = e.target.value;
-		setInputValue(input);
-	};
-
-	const onKeyDown = (e) => {
-		if (e.keyCode === 13) {
-			let yt_id = inputValue.split('v=')[1];
-			const split_param = yt_id.indexOf('&');
-			if (split_param != -1) {
-				yt_id = yt_id.substring(0, split_param);
-			}
-
-			getYoutubeTitle(yt_id, function (err, title) {
-				setPlaylist((playlist) => [
-					...playlist,
-					{
-						source: 'youtube',
-						uid: yt_id,
-						title: title
-					}
-					]);
-			});
-			setInputValue('');
-		}
-	};
-
-	useEffect(() => {
-		console.log(playlist, 'playlist');
-	}, [playlist]);
-
-	const selectPlaylistItem = (item, i) => {
-		const selected_remaining = playlist.slice(i);
-		playlist.splice(i, playlist.length);
-		
-		const new_playlist = [...selected_remaining, ...playlist];
-
-		setPlaylist(new_playlist);
-		setCurrent(new_playlist[0]);
-		setProgress(0);
-	}
 
 	return (
 		<div className={styles('video-container')}>
+			<div className={styles('current-title')}>
+			<CSSTransition
+		        in={currentTitle.length > 0}
+		        timeout={300}
+		        classNames='title'
+		        unmountOnExit
+		        onEnter={() => setCurrentTitle(currentTitle)}
+		        onExited={() => setCurrentTitle('')}
+		      >
+				<h1>
+					{currentTitle}
+				</h1>
+			</CSSTransition>
+			</div>
 			{current.source === 'youtube' && (
-				<div className={styles('video-player')}>
+				<div
+					className={styles('video-player', {
+						'show-cover': toggleCover
+					})}
+					onClick={() => setToggleCover(!toggleCover)}
+					style={{
+						backgroundImage: `url(//img.youtube.com/vi/${current.uid}/0.jpg)`
+					}}
+				>
 					<YouTube
 						videoId={current.uid}
 						opts={opts}
@@ -167,44 +73,36 @@ const YoutubePlayer = ({
 					/>
 				</div>
 			)}
-			<div className={styles('controls')}>
-				<input
-					type='text'
-					value={inputValue}
-					onChange={onInputChange}
-					onKeyDown={onKeyDown}
-					placeholder='paste a youtube link'
-				/>
-				{`${current.source}: ${current.uid}`}
-				<button onClick={_prevSong}>Previous</button>
-				{playState === 1 ? (
-					<button onClick={() => player.pauseVideo()}>Pause</button>
-					) : (
-					<button onClick={() => player.playVideo()}>Play</button>
-				)}
-				<button onClick={_nextSong}>Next</button>
-				<input
-					className='progress-bar'
-					type='range'
-					value={progress}
-					onChange={_onProgressChange}
-					min='0'
-					max='100'
-					step='0.01'
-				/>
-				{playlist && (
-					<div>
-						{playlist.map((item, i) => (
-							<div key={i} onClick={() => selectPlaylistItem(item, i)}>
-								<img src={`https://img.youtube.com/vi/${item.uid}/0.jpg`} width='100' />
-								{item.uid}
-							</div>
-						))}
-					</div>
-				)}
-			</div>
+			<ProgressBar
+				progress={progress}
+				_onProgressChange={_onProgressChange}
+			/>
+			<Controls
+				playState={playState}
+				playlist={playlist}
+				player={player}
+				selectPlaylistItem={selectPlaylistItem}
+				_prevSong={_prevSong}
+				_nextSong={_nextSong}
+			/>
 		</div>
 	);
+}
+
+YoutubePlayer.propTypes = {
+	currentTitle: PropTypes.string,
+	current: PropTypes.object,
+	progress: PropTypes.string,
+	playState: PropTypes.number,
+	playlist: PropTypes.array,
+	player: PropTypes.object,
+	selectPlaylistItem: PropTypes.func,
+	setCurrentTitle: PropTypes.func,
+	_onReady: PropTypes.func,
+	_prevSong: PropTypes.func,
+	_nextSong: PropTypes.func,
+	_onStateChange: PropTypes.func,
+	_onProgressChange: PropTypes.func,
 }
 
 export default YoutubePlayer;

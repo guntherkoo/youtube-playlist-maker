@@ -28,6 +28,7 @@
         "alias": {
           "components": "./components",
           "pages": "./pages",
+          "lib": "./lib",
           "config": "./config",
           "utils": "./utils",
           "styles": "./styles",

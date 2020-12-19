@@ -1,0 +1,59 @@
+@import 'styles/_colors.scss';
+@import 'styles/_easing.scss';
+
+.container {
+	position: relative;
+
+	button {
+		background-color: transparent;
+		width: 6rem;
+		height: 6rem;
+		margin: 0 2rem;
+		padding: 1rem;
+		border: none;
+		position: relative;
+		cursor: pointer;
+
+		&:focus {
+			outline: none;
+		}
+
+		&:before {
+			content: '';
+			position: absolute;
+			top: 0;
+			width: 0;
+			height: 3px;
+			left: 50%;
+			z-index: -1;
+			background-color: $purple;
+			transform: translateX(-50%);
+			transition: width .2s $easeOutCubic;
+		}
+
+		&:after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			width: 0;
+			height: 3px;
+			left: 50%;
+			z-index: 2;
+			background-color: $purple;
+			transform: translateX(-50%);
+			transition: width .2s $easeOutCubic;
+		}
+
+		&:hover {
+			&:after {
+				width: 70%;
+			}
+		}
+
+		&:active {
+			&:before {
+				width: 70%;
+			}
+		}
+	}
+}

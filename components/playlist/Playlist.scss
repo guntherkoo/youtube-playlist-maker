@@ -1,0 +1,84 @@
+@import 'styles/_colors.scss';
+@import 'styles/_easing.scss';
+
+.container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	max-width: 30rem;
+	height: 100%;
+	background-color: $darkergrey;
+	box-shadow: 0 5px 2rem rgba(black, .5);
+	transform: translateX(-100%);
+	transition: transform .5s $easeOutCubic;
+
+	&.show-playlist {
+		transform: translateX(0);
+	}
+
+	.menu {
+		background-color: transparent;
+		border: none;
+		position: absolute;
+		top: 3rem;
+		right: -6rem;
+		cursor: pointer;
+
+		&:focus {
+			outline: none;
+		}
+
+		svg {
+			width: 3.4rem;
+			height: 3.4rem;
+		}
+	}
+}
+
+.input-url {
+	width: calc(100% - 4rem);
+	margin: 3rem 0 2rem 2rem;
+	padding: 1rem 1.5rem;
+	border: 1px solid $purple;
+	border-radius: 2rem;
+	font-size: 1.4rem;
+	font-weight: 300;
+	margin-bottom: 3rem;
+
+	&:focus {
+		outline: none;
+	}
+}
+
+.playlist {
+	position: absolute;
+	top: 9rem;
+	width: 100%;
+	height: calc(100% - 18rem);
+	border-bottom: 1px solid rgba(white, .1);
+
+	.playlist-item {
+		cursor: pointer;
+	}
+}
+
+.sign-out {
+	position: absolute;
+	bottom: 3rem;
+	padding: 1rem 2rem;
+	border-radius: 2rem;
+	border: none;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-size: 1rem;
+	left: 50%;
+	cursor: pointer;
+	background-color: white;
+	transition: background-color .2s;
+	transform: translateX(-50%);
+
+	&:hover {
+		background-color: $red;
+	}
+}
