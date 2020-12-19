@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropType from 'prop-types';
-import firebase from 'firebase';
 import InputText from 'components/input-text';
 import Button from 'components/controls/Button';
 import MenuBtn from 'components/icons/menu.svg';
@@ -41,21 +40,21 @@ const Playlist = ({
 					{playlist.map((item, i) => (
 						<div
 							className={styles('playlist-item', {
-								'active' : i === 0
-							})} key={i} onClick={() => selectPlaylistItem(item, i)}>
+								'playing': i === 0
+							})}
+							key={i} 
+							onClick={() => selectPlaylistItem(item, i)}
+						>
 							<img src={`//img.youtube.com/vi/${item.uid}/0.jpg`} width='100' />
-							{item.uid}
+							{i === 0 && (
+								<p>
+									Now Playing...		
+								</p>
+							)}
 						</div>
 					))}
 				</div>
 			)}
-			<button
-				className={styles('sign-out')}
-				type='button'
-				onClick={() => firebase.auth().signOut()}
-			>
-				Sign Out
-			</button>
 		</div>
 	);
 }

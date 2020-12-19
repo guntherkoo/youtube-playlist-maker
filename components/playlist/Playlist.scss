@@ -60,25 +60,31 @@
 
 	.playlist-item {
 		cursor: pointer;
-	}
-}
+		color: white;
+		display: flex;
+		align-items: center;
+		margin: 1rem 0;
+		background-color: rgba(white, .04);
+		transition: background-color .25s;
 
-.sign-out {
-	position: absolute;
-	bottom: 3rem;
-	padding: 1rem 2rem;
-	border-radius: 2rem;
-	border: none;
-	text-transform: uppercase;
-	letter-spacing: 1px;
-	font-size: 1rem;
-	left: 50%;
-	cursor: pointer;
-	background-color: white;
-	transition: background-color .2s;
-	transform: translateX(-50%);
+		img {
+			margin-right: 1rem;
+			filter: grayscale(100%);
+			transition: filter .25s;
+		}
 
-	&:hover {
-		background-color: $red;
+		&.playing {
+			img {
+				filter: grayscale(0);
+			}
+		}
+
+		&:hover {
+			background-color: rgba(white, .1);
+
+			img {
+				filter: grayscale(0);
+			}
+		}
 	}
 }

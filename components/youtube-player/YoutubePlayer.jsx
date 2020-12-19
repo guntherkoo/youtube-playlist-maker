@@ -81,7 +81,6 @@ const YoutubePlayer = ({
 				playState={playState}
 				playlist={playlist}
 				player={player}
-				selectPlaylistItem={selectPlaylistItem}
 				_prevSong={_prevSong}
 				_nextSong={_nextSong}
 			/>

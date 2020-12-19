@@ -14,7 +14,6 @@ import styles from './Controls.scss';
 const Controls = ({
 	playState,
 	player,
-	selectPlaylistItem = () => {},
 	_prevSong = () => {},
 	_nextSong = () => {},
 }) => {
@@ -52,7 +51,6 @@ const Controls = ({
 Controls.propTypes = {
 	playState: PropTypes.number,
 	player: PropTypes.object,
-	selectPlaylistItem: PropTypes.func,
 	_prevSong: PropTypes.func,
 	_nextSong: PropTypes.func,
 }
