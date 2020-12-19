@@ -2,6 +2,7 @@ import React, { useState, Component } from 'react';
 import firebase from 'firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
+import Meta from 'components/meta';
 import YouTubeLogo from 'components/icons/youtube.svg';
 import 'styles/styles.scss';
 import styles from './index.scss';
@@ -52,6 +53,7 @@ class Index extends Component {
 	render() {
 		return (
 			<div className={styles('container')}>
+				<Meta />
 				{this.state.isSignedIn ? (
 					<MainPlayer />
 					) : (
