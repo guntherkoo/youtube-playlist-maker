@@ -1,6 +1,5 @@
 import React, { useState, Component } from 'react';
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
+import firebase from 'firebase';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { CSSTransition } from 'react-transition-group';
 
@@ -64,7 +63,7 @@ class Index extends Component {
 	componentDidMount = () => {
 		setTimeout(() => {
 			this.setState({ isDoneLoading: true });
-		}, 2000);
+		}, 1000);
 
 		this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
 			if (user) {
@@ -89,7 +88,7 @@ class Index extends Component {
 		return (
 			<CSSTransition
 		        in={this.state.isDoneLoading}
-		        timeout={1000}
+		        timeout={500}
 		        classNames='loading'
 		        unmountOnExit
 		        onEnter={() => this.setState({isDoneLoading: true})}
