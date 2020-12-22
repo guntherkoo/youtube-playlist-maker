@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import firebase from 'firebase/app';
+import { CSSTransition } from 'react-transition-group';
 import getYoutubeTitle from 'get-youtube-title';
 import YoutubePlayer from 'components/youtube-player';
 import Playlist from 'components/playlist';
@@ -27,29 +28,46 @@ const playlistItems = [
 	}
 ];
 
-
 const MainPlayer = () => {
-	const [playlist, setPlaylist] = useState(playlistItems);
+	const [playlist, setPlaylist] = useState([]);
 	const [player, setPlayer] = useState();
-	const [current, setCurrent] = useState(playlist[0]);
+	const [current, setCurrent] = useState({});
 	const [currentTitle, setCurrentTitle] = useState('');
 	const [progress, setProgress] = useState('0');
 	const [playState, setPlayState] = useState(0);
 	const [duration, setDuration] = useState(0);
 	const [inputValue, setInputValue] = useState('');
+	const [showNoPlaylist, setShowNoPlaylist] = useState(false);
 
-	const _nextSong = () => {
-		const current_song = playlist.shift();
-		const new_playlist = playlist.concat(current_song);
+	useEffect(() => {
+		const { uid } = firebase.auth() && firebase.auth().currentUser;
+
+		firebase.database().ref().child('users/' + uid).once('value', snapshot => {
+			const playlist = (snapshot.val().playlist ? Object.values(snapshot.val().playlist) : []);
+
+			let array = [...playlist];
+
+			if (array.length === 0) {
+				setShowNoPlaylist(true);
+			}
+
+			setPlaylist(array);
+			setCurrent(array[0]);
+		});
+	}, []);
+
+	const _next = () => {
+		const current_item = playlist.shift();
+		const new_playlist = playlist.concat(current_item);
 
 		setPlaylist(new_playlist);
 		setCurrent(playlist[0]);
 		setProgress('0');
 	};
 
-	const _prevSong = () => {
-		const prev_song = playlist[playlist.length - 1];
-		playlist.unshift(prev_song);
+	const _prev = () => {
+		const prev_item = playlist[playlist.length - 1];
+		playlist.unshift(prev_item);
 		playlist.pop();
 		setCurrentTitle('');
 
@@ -66,7 +84,7 @@ const MainPlayer = () => {
 		setDuration(current_duration);
 		// next on playlist when ended
 		if (current_state === 0) {
-			_nextSong();
+			_next();
 		}
 	};
 
@@ -104,25 +122,61 @@ const MainPlayer = () => {
 		setInputValue(input);
 	};
 
+	const writeNewPlaylist = (yt_id, title) => {
+		const {
+			displayName,
+			uid,
+		} = firebase.auth().currentUser;
+
+		// A post entry.
+		var postData = {
+			source: 'youtube',
+			uid: yt_id,
+			title: title,
+		};
+
+		// Get a key for a new Post.
+		var newPostKey = firebase.database().ref().child('users/' + uid).push().key;
+
+		// Write the new post's data simultaneously in the posts list and the user's post list.
+		var updates = {};
+  		updates['/users/' + uid + '/' + 'playlist' + '/' + newPostKey] = postData;
+
+		return firebase.database().ref().update(updates);
+	}
+
 	const onKeyDown = (e) => {
 		if (e.keyCode === 13) {
-			let yt_id = (inputValue.split('v=')[1] || inputValue.split('youtu.be/')[1]);
-			const split_param = yt_id.indexOf('&');
-			if (split_param != -1) {
-				yt_id = yt_id.substring(0, split_param);
-			}
+			if (inputValue.length !== 0) {
+				let yt_id = (inputValue.split('v=')[1] || inputValue.split('youtu.be/')[1]);
+				const split_param = yt_id.indexOf('&');
+				if (split_param != -1) {
+					yt_id = yt_id.substring(0, split_param);
+				}
 
-			getYoutubeTitle(yt_id, function (err, title) {
-				setPlaylist((playlist) => [
-					...playlist,
-					{
-						source: 'youtube',
-						uid: yt_id,
-						title: title
-					}
-					]);
-			});
-			setInputValue('');
+				const exist = playlist.filter(item => item.uid.includes(yt_id));
+
+				if (exist.length === 0) {
+					getYoutubeTitle(yt_id, (err, title) => {
+						writeNewPlaylist(yt_id, title);
+
+						setPlaylist(playlist => [
+							...playlist,
+							{
+								source: 'youtube',
+								uid: yt_id,
+								title: title
+							}
+						]);
+					});
+				}
+
+				if (showNoPlaylist) {
+					setShowNoPlaylist(false);
+				};
+
+				setInputValue('');
+			}
 		}
 	};
 
@@ -138,18 +192,6 @@ const MainPlayer = () => {
 	}
 
 	useEffect(() => {
-		setCurrentTitle('');
-
-		setTimeout(() => {
-			getYoutubeTitle(playlist[0].uid, function (err, title) {
-				setCurrentTitle(title);
-			});
-		}, 1000);
-
-		return () => clearTimeout();
-	}, [playlist]);
-
-	useEffect(() => {
 		let interval;
 		if (player && playState === 1) {
 			interval = setInterval(() => {
@@ -161,8 +203,31 @@ const MainPlayer = () => {
 		return () => clearInterval(interval);
 	}, [playState, duration, progress]);
 
+	useEffect(() => {
+		if (playlist.length > 0) {
+			setCurrent(playlist[0]);
+		}
+	}, [playlist])
+
 	return (
 		<React.Fragment>
+			<CSSTransition
+		        in={showNoPlaylist}
+		        timeout={1000}
+		        classNames='loading'
+		        unmountOnExit
+		        onEnter={() => setShowNoPlaylist(true)}
+		        onExited={() => setShowNoPlaylist(false)}
+		      >
+				<div className={styles('no-playlist')}>
+					<h1>
+						You don't have any videos!
+					</h1>
+					<h2>
+						Start saving some videos!
+					</h2>
+				</div>
+		   	</CSSTransition>
 			<Profile />
 			<YoutubePlayer
 				currentTitle={currentTitle}
@@ -174,8 +239,8 @@ const MainPlayer = () => {
 				selectPlaylistItem={selectPlaylistItem}
 				setCurrentTitle={setCurrentTitle}
 				_onReady={_onReady}
-				_prevSong={_prevSong}
-				_nextSong={_nextSong}
+				_prev={_prev}
+				_next={_next}
 				_onStateChange={_onStateChange}
 				_onProgressChange={_onProgressChange}
 			/>

@@ -14,12 +14,12 @@ import styles from './Controls.scss';
 const Controls = ({
 	playState,
 	player,
-	_prevSong = () => {},
-	_nextSong = () => {},
+	_prev = () => {},
+	_next = () => {},
 }) => {
 	return (
 		<div className={styles('container')}>
-			<Button onClick={_prevSong}>
+			<Button onClick={_prev}>
 				<PreviousBtn />
 			</Button>
 			{playState === 1 ? (
@@ -31,7 +31,7 @@ const Controls = ({
 					<PlayBtn />
 				</Button>
 			)}
-			<Button onClick={_nextSong}>
+			<Button onClick={_next}>
 				<NextBtn />
 			</Button>
 			{player && player.isMuted() === true ? (
@@ -51,8 +51,8 @@ const Controls = ({
 Controls.propTypes = {
 	playState: PropTypes.number,
 	player: PropTypes.object,
-	_prevSong: PropTypes.func,
-	_nextSong: PropTypes.func,
+	_prev: PropTypes.func,
+	_next: PropTypes.func,
 }
 
 export default Controls;

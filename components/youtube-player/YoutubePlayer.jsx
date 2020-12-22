@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import YouTube from 'react-youtube';
 import ProgressBar from 'components/progress-bar';
@@ -19,12 +19,10 @@ const YoutubePlayer = ({
 	setCurrentTitle = () => {},
 	_onProgressChange = () => {},
 	_onReady = () => {},
-	_prevSong = () => {},
-	_nextSong = () => {},
+	_prev = () => {},
+	_next = () => {},
 	_onStateChange = () => {},
 }) => {
-	const [toggleCover, setToggleCover] = useState(false);
-
 	const opts = {
 		height: '100%',
 		width: '100%',
@@ -41,30 +39,15 @@ const YoutubePlayer = ({
 
 	return (
 		<div className={styles('video-container')}>
-			<div className={styles('current-title')}>
-			<CSSTransition
-		        in={currentTitle.length > 0}
-		        timeout={300}
-		        classNames='title'
-		        unmountOnExit
-		        onEnter={() => setCurrentTitle(currentTitle)}
-		        onExited={() => setCurrentTitle('')}
-		      >
-				<h1>
-					{currentTitle}
-				</h1>
-			</CSSTransition>
-			</div>
-			{current.source === 'youtube' && (
-				<div
-					className={styles('video-player', {
-						'show-cover': toggleCover
-					})}
-					onClick={() => setToggleCover(!toggleCover)}
-					style={{
-						backgroundImage: `url(//img.youtube.com/vi/${current.uid}/0.jpg)`
-					}}
-				>
+			{current && 
+				<div className={styles('current-title')}>
+					<h1>
+						{current.title}
+					</h1>
+				</div>
+			}
+			{current && current.source === 'youtube' && (
+				<div className={styles('video-player')}>
 					<YouTube
 						videoId={current.uid}
 						opts={opts}
@@ -81,8 +64,8 @@ const YoutubePlayer = ({
 				playState={playState}
 				playlist={playlist}
 				player={player}
-				_prevSong={_prevSong}
-				_nextSong={_nextSong}
+				_prev={_prev}
+				_next={_next}
 			/>
 		</div>
 	);
@@ -98,8 +81,8 @@ YoutubePlayer.propTypes = {
 	selectPlaylistItem: PropTypes.func,
 	setCurrentTitle: PropTypes.func,
 	_onReady: PropTypes.func,
-	_prevSong: PropTypes.func,
-	_nextSong: PropTypes.func,
+	_prev: PropTypes.func,
+	_next: PropTypes.func,
 	_onStateChange: PropTypes.func,
 	_onProgressChange: PropTypes.func,
 }
