@@ -2,6 +2,32 @@
 @import 'styles/_easing.scss';
 @import 'styles/_mixins.scss';
 
+.menu {
+	background-color: transparent;
+	border: none;
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	margin: 0;
+	padding: 0;
+	z-index: 3;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	&:focus {
+		outline: none;
+	}
+
+	svg {
+		width: 3.4rem;
+		height: 3.4rem;
+		position: relative;
+		z-index: 1;
+	}
+}
+
 .container {
 	position: absolute;
 	top: 0;
@@ -17,53 +43,6 @@
 	&.show-playlist {
 		transform: translateX(0);
 	}
-
-	.menu {
-		background-color: transparent;
-		border: none;
-		position: absolute;
-		top: 3rem;
-		right: -6rem;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-    	justify-content: center;
-
-		&:focus {
-			outline: none;
-		}
-
-		svg {
-			width: 3.4rem;
-			height: 3.4rem;
-			position: relative;
-			z-index: 1;
-		}
-
-		@include ripple-effect;
-	}
-}
-
-@keyframes ripple {
-	0% {
-		transform: scale(1);
-		opacity: 0;
-	}
-
-	50% {
-		transform: scale(2);
-		opacity: 1;
-	}
-
-	75% {
-		opacity: 1;
-	}
-
-	100% {
-		transform: scale(2.5);
-		opacity: 0;
-	}
-
 }
 
 .input-url {
@@ -75,6 +54,8 @@
 	font-size: 1.4rem;
 	font-weight: 300;
 	margin-bottom: 3rem;
+	position: absolute;
+	bottom: 0;
 
 	&:focus {
 		outline: none;
@@ -83,9 +64,9 @@
 
 .playlist {
 	position: absolute;
-	top: 9rem;
+	top: 6rem;
 	width: 100%;
-	height: calc(100% - 18rem);
+	height: calc(100% - 15rem);
 	border-bottom: 1px solid rgba(white, .1);
 
 	.playlist-item {

@@ -25,3 +25,18 @@
 		color: white;
 	}
 }
+
+:global .loading-enter {
+	opacity: 0;
+}
+:global .loading-enter-active {
+	opacity: 1;
+	transition: opacity .5s, transform .5s;
+}
+:global .loading-exit {
+	opacity: 1;
+}
+:global .loading-exit-active {
+	opacity: 0;
+	transition: opacity .5s, transform .5s;
+}

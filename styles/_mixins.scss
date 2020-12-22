@@ -1,4 +1,4 @@
-@mixin ripple-effect {
+@mixin btn-hover-effect {
 	&:after {
 		width: 0;
 		height: 0;
@@ -13,53 +13,50 @@
 		transition: width .25s $easeOutCubic, height .25s $easeOutCubic;
 	}
 
-	&:before {
-		width: 0;
-		height: 0;
-		content: '';
-		background-color: transparent;
-		position: absolute;
-		z-index: 0;
-		border-radius: 5rem;
-		transform-origin: 50% 50%;
-		transition: width .25s $easeOutCubic, height .25s $easeOutCubic;
-	}
-
 	&:hover {
 		&:after {
 			width: 5rem;
 			height: 5rem;
 		}
 	}
+}
 
-	&:active {
-		&:before {
-			animation: ripple .5s linear 0s 1;
-			border: 2px solid $purple;
-			width: 4rem;
-			height: 4rem;
-		}
+@mixin ripple-effect {
+	&:before {
+		width: 4rem;
+		height: 4rem;
+		content: '';
+		background-color: transparent;
+		position: absolute;
+		z-index: 0;
+		border-radius: 5rem;
+		animation: ripple .5s linear 0s 1;
+		transform-origin: 50% 50%;
+		transition: width .25s $easeOutCubic, height .25s $easeOutCubic;
 	}
 }
 
 @keyframes ripple {
 	0% {
 		transform: scale(1);
+		border: 1px solid $purple;
 		opacity: 0;
 	}
 
 	50% {
 		transform: scale(2);
+		border: 2px solid $purple;
 		opacity: 1;
 	}
 
 	75% {
 		opacity: 1;
+		border: 1px solid $purple;
 	}
 
 	100% {
 		transform: scale(2.5);
+		border: 0 solid $purple;
 		opacity: 0;
 	}
-
 }

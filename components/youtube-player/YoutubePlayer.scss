@@ -65,6 +65,7 @@
 	border-radius: 0;
 	transition: border-radius .5s $easeOutCubic, width .5s $easeOutCubic;
 	background-size: cover;
+	background-position: 50% 50%;
 	background-repeat: no-repeat;
 
 	> div {

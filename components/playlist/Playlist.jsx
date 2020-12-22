@@ -17,9 +17,7 @@ const Playlist = ({
 	const [toggleMenu, setToggleMenu] = useState(false);
 
 	return (
-		<div className={styles('container', {
-			'show-playlist': toggleMenu
-		})}>
+		<React.Fragment>
 			<Button className={styles('menu')} onClick={() => setToggleMenu(!toggleMenu)}>
 				{toggleMenu ? (
 					<CloseBtn />
@@ -28,34 +26,38 @@ const Playlist = ({
 					)
 				}
 			</Button>
-			<InputText
-				className={styles('input-url')}
-				inputValue={inputValue}
-				onInputChange={onInputChange}
-				onKeyDown={onKeyDown}
-				placeholder='Paste a YouTube URL'
-			/>
-			{playlist && (
-				<div className={styles('playlist')}>
-					{playlist.map((item, i) => (
-						<div
-							className={styles('playlist-item', {
-								'playing': i === 0
-							})}
-							key={i} 
-							onClick={() => selectPlaylistItem(item, i)}
-						>
-							<img src={`//img.youtube.com/vi/${item.uid}/0.jpg`} width='100' />
-							{i === 0 && (
-								<p>
-									Now Playing...		
-								</p>
-							)}
-						</div>
-					))}
-				</div>
-			)}
-		</div>
+			<div className={styles('container', {
+				'show-playlist': toggleMenu
+			})}>
+				<InputText
+					className={styles('input-url')}
+					inputValue={inputValue}
+					onInputChange={onInputChange}
+					onKeyDown={onKeyDown}
+					placeholder='Paste a YouTube URL'
+				/>
+				{playlist && (
+					<div className={styles('playlist')}>
+						{playlist.map((item, i) => (
+							<div
+								className={styles('playlist-item', {
+									'playing': i === 0
+								})}
+								key={i} 
+								onClick={() => selectPlaylistItem(item, i)}
+							>
+								<img src={`//img.youtube.com/vi/${item.uid}/0.jpg`} width='100' />
+								{i === 0 && (
+									<p>
+										Now Playing...		
+									</p>
+								)}
+							</div>
+						))}
+					</div>
+				)}
+			</div>
+		</React.Fragment>
 	);
 }
 

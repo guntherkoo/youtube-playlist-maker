@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import getYoutubeTitle from 'get-youtube-title';
 import YoutubePlayer from 'components/youtube-player';
 import Playlist from 'components/playlist';
+import Profile from 'components/profile';
 
 import styles from './MainPlayer.scss';
 
@@ -105,7 +106,7 @@ const MainPlayer = () => {
 
 	const onKeyDown = (e) => {
 		if (e.keyCode === 13) {
-			let yt_id = inputValue.split('v=')[1];
+			let yt_id = (inputValue.split('v=')[1] || inputValue.split('youtu.be/')[1]);
 			const split_param = yt_id.indexOf('&');
 			if (split_param != -1) {
 				yt_id = yt_id.substring(0, split_param);
@@ -162,18 +163,7 @@ const MainPlayer = () => {
 
 	return (
 		<React.Fragment>
-			<div className={styles('profile')}>
-				<p>
-					Welcome, {firebase.auth().currentUser.displayName}
-				</p>
-				<button
-					className={styles('sign-out')}
-					type='button'
-					onClick={() => firebase.auth().signOut()}
-				>
-					Sign Out
-				</button>
-			</div>
+			<Profile />
 			<YoutubePlayer
 				currentTitle={currentTitle}
 				current={current}
