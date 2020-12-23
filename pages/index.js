@@ -54,7 +54,8 @@ class Index extends Component {
 				console.log('User does not exist');
 				firebase.database().ref('users/' + userId).set({
 					username: name,
-					email: email
+					email: email,
+					playlist: '',
 				});
 			}
 			console.log('User does exist');
@@ -77,7 +78,7 @@ class Index extends Component {
 				this.writeUserData(uid, displayName, email);
 			}
 
-			this.setState({ isSignedIn: !!user })
+			this.setState({ isSignedIn: !!user });
 		});
 	}
 

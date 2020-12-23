@@ -25,7 +25,9 @@ const MainPlayer = () => {
 		firebase.database().ref().child('users/' + uid).once('value', snapshot => {
 			let playlist = [];
 
-			if (snapshot.val().playlist) {
+			let exists = (snapshot.val() !== null);
+
+			if (exists) {
 				Object.entries(snapshot.val().playlist).forEach((item, i) => 
 					playlist.push({
 						id: item[0],
