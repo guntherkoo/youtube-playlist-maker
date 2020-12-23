@@ -1,7 +1,7 @@
 {
     "name": "youtube-playlist-maker",
     "author": "Gunther Koo",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "main": "server.js",
     "scripts": {
         "dev": "node server.js",

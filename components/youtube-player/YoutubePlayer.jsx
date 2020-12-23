@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import YouTube from 'react-youtube';
 import ProgressBar from 'components/progress-bar';
 import Controls from 'components/controls';
-import { CSSTransition } from 'react-transition-group';
 
 import styles from './YoutubePlayer.scss';
 
@@ -29,8 +28,9 @@ const YoutubePlayer = ({
 		playerVars: {
 			autoplay: 1,
 			rel: 0,
-			fs: 0,
+			fs: 1,
 			playsinline: 1,
+			modestbranding: 0,
 			enablejsapi: 1,
 			controls: 0,
 			origin: 'http://localhost:8888'

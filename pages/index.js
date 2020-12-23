@@ -4,6 +4,7 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { CSSTransition } from 'react-transition-group';
 
 import Meta from 'components/meta';
+import Spinner from 'components/spinner';
 import YouTubeLogo from 'components/icons/youtube-logo.svg';
 import 'styles/styles.scss';
 import styles from './index.scss';
@@ -63,7 +64,7 @@ class Index extends Component {
 	componentDidMount = () => {
 		setTimeout(() => {
 			this.setState({ isDoneLoading: true });
-		}, 1000);
+		}, 3000);
 
 		this.unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
 			if (user) {
@@ -86,33 +87,45 @@ class Index extends Component {
 
 	render() {
 		return (
-			<CSSTransition
-		        in={this.state.isDoneLoading}
-		        timeout={500}
-		        classNames='loading'
-		        unmountOnExit
-		        onEnter={() => this.setState({isDoneLoading: true})}
-		        onExited={() => this.setState({isDoneLoading: false})}
-		      >
-	      		<div className={styles('container')}>
-					<Meta />
-					{this.state.isSignedIn ? (
-						<MainPlayer />
-						) : (
-						<div className={styles('sign-in')}>
-							<YouTubeLogo />
-							<h2>
-								Create your own playlist
-							</h2>
-							<StyledFirebaseAuth
-								className={styles('sign-in-ui')}
-								uiConfig={this.uiConfig}
-								firebaseAuth={firebase.auth()}
-							/>
-						</div>
-					)}
-				</div>
-			</CSSTransition>
+			<React.Fragment>
+				<CSSTransition
+			        in={!this.state.isDoneLoading}
+			        timeout={500}
+			        classNames='loading'
+			        unmountOnExit
+			        onEnter={() => this.setState({isDoneLoading: false})}
+			        onExited={() => this.setState({isDoneLoading: true})}
+			      >
+			      <Spinner />
+			    </CSSTransition>
+				<CSSTransition
+			        in={this.state.isDoneLoading}
+			        timeout={500}
+			        classNames='loading'
+			        unmountOnExit
+			        onEnter={() => this.setState({isDoneLoading: true})}
+			        onExited={() => this.setState({isDoneLoading: false})}
+			      >
+		      		<div className={styles('container')}>
+						<Meta />
+						{this.state.isSignedIn ? (
+							<MainPlayer />
+							) : (
+							<div className={styles('sign-in')}>
+								<YouTubeLogo />
+								<h2>
+									Create your own playlist
+								</h2>
+								<StyledFirebaseAuth
+									className={styles('sign-in-ui')}
+									uiConfig={this.uiConfig}
+									firebaseAuth={firebase.auth()}
+								/>
+							</div>
+						)}
+					</div>
+				</CSSTransition>
+			</React.Fragment>
 		)
 	}
 }

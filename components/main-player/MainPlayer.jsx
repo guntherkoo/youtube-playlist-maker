@@ -8,26 +8,6 @@ import Profile from 'components/profile';
 
 import styles from './MainPlayer.scss';
 
-
-const playlistItems = [
-	{
-		source: 'youtube',
-		uid: 'jkBfGvb7NzM'
-	},
-	{
-		source: 'youtube',
-		uid: 'G4JuopziR3Q'
-	},
-	{
-		source: 'youtube',
-		uid: 'UBhlqe2OTt4'
-	},
-	{
-		source: 'youtube',
-		uid: '4iLVoEg9aLk'
-	}
-];
-
 const MainPlayer = () => {
 	const [playlist, setPlaylist] = useState([]);
 	const [player, setPlayer] = useState();
@@ -43,7 +23,16 @@ const MainPlayer = () => {
 		const { uid } = firebase.auth() && firebase.auth().currentUser;
 
 		firebase.database().ref().child('users/' + uid).once('value', snapshot => {
-			const playlist = (snapshot.val().playlist ? Object.values(snapshot.val().playlist) : []);
+			let playlist = [];
+
+			if (snapshot.val().playlist) {
+				Object.entries(snapshot.val().playlist).forEach((item, i) => 
+					playlist.push({
+						id: item[0],
+						...item[1],
+					})
+				);
+			}
 
 			let array = [...playlist];
 
@@ -129,56 +118,67 @@ const MainPlayer = () => {
 		} = firebase.auth().currentUser;
 
 		// A post entry.
-		var postData = {
+		const postData = {
 			source: 'youtube',
 			uid: yt_id,
 			title: title,
 		};
 
 		// Get a key for a new Post.
-		var newPostKey = firebase.database().ref().child('users/' + uid).push().key;
+		const newPostKey = firebase.database().ref().child('users/' + uid).push().key;
 
 		// Write the new post's data simultaneously in the posts list and the user's post list.
-		var updates = {};
-  		updates['/users/' + uid + '/' + 'playlist' + '/' + newPostKey] = postData;
+		const updates = {};
+  		updates[`/users/${uid}/playlist/${newPostKey}`] = postData;
 
 		return firebase.database().ref().update(updates);
 	}
 
+	const deletePlaylistItem = key_id => {
+		const { uid } = firebase.auth().currentUser;
+
+		let userRef = firebase.database().ref().child(`/users/${uid}/playlist/${key_id}`);
+    	userRef.remove();
+	}
+
 	const onKeyDown = (e) => {
 		if (e.keyCode === 13) {
-			if (inputValue.length !== 0) {
-				let yt_id = (inputValue.split('v=')[1] || inputValue.split('youtu.be/')[1]);
-				const split_param = yt_id.indexOf('&');
-				if (split_param != -1) {
-					yt_id = yt_id.substring(0, split_param);
-				}
-
-				const exist = playlist.filter(item => item.uid.includes(yt_id));
-
-				if (exist.length === 0) {
-					getYoutubeTitle(yt_id, (err, title) => {
-						writeNewPlaylist(yt_id, title);
-
-						setPlaylist(playlist => [
-							...playlist,
-							{
-								source: 'youtube',
-								uid: yt_id,
-								title: title
-							}
-						]);
-					});
-				}
-
-				if (showNoPlaylist) {
-					setShowNoPlaylist(false);
-				};
-
-				setInputValue('');
-			}
+			addPlaylistItem();
 		}
 	};
+
+	const addPlaylistItem = () => {
+		if (inputValue.length !== 0) {
+			let yt_id = (inputValue.split('v=')[1] || inputValue.split('youtu.be/')[1]);
+			const split_param = yt_id.indexOf('&');
+			if (split_param != -1) {
+				yt_id = yt_id.substring(0, split_param);
+			}
+
+			const exist = playlist.filter(item => item.uid.includes(yt_id));
+
+			if (exist.length === 0) {
+				getYoutubeTitle(yt_id, (err, title) => {
+					writeNewPlaylist(yt_id, title);
+
+					setPlaylist(playlist => [
+						...playlist,
+						{
+							source: 'youtube',
+							uid: yt_id,
+							title: title
+						}
+					]);
+				});
+			}
+
+			if (showNoPlaylist) {
+				setShowNoPlaylist(false);
+			};
+
+			setInputValue('');
+		}
+	}
 
 	const selectPlaylistItem = (item, i) => {
 		const selected_remaining = playlist.slice(i);
@@ -189,6 +189,13 @@ const MainPlayer = () => {
 		setPlaylist(new_playlist);
 		setCurrent(new_playlist[0]);
 		setProgress('0');
+	}
+
+	const onDeleteItem = (uid, key_id) => {
+		const filtered_playlist = playlist.filter(item =>  item.uid !== uid);
+
+		setPlaylist(filtered_playlist);
+		deletePlaylistItem(key_id);
 	}
 
 	useEffect(() => {
@@ -250,6 +257,8 @@ const MainPlayer = () => {
 				onInputChange={onInputChange}
 				onKeyDown={onKeyDown}
 				selectPlaylistItem={selectPlaylistItem}
+				onDeleteItem={onDeleteItem}
+				addPlaylistItem={addPlaylistItem}
 			/>
 		</React.Fragment>
 	);
