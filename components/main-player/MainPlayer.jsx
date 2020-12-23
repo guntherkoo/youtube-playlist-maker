@@ -150,7 +150,7 @@ const MainPlayer = () => {
 	};
 
 	const addPlaylistItem = () => {
-		if (inputValue.length !== 0) {
+		if ((inputValue.length !== 0 && inputValue.indexOf('youtu') !== -1)) {
 			let yt_id = (inputValue.split('v=')[1] || inputValue.split('youtu.be/')[1]);
 			const split_param = yt_id.indexOf('&');
 			if (split_param != -1) {
